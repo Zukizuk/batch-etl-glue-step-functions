@@ -1,0 +1,11 @@
+id,title,source,price,currency,listing_created_on,is_active,last_modified_timestamp
+1,"Johnson, Fowler and Johnson",Realtor,4020.95,EUR,27/03/2024,True,27/12/2021
+2,Kelley-Johnson,Craigslist,1390.01,INR,23/07/2023,True,10/02/2023
+3,"Gibson, Delgado and Austin",Craigslist,3082.67,INR,15/04/2024,True,02/01/2020
+4,"Kelly, Smith and Gibson",Zillow,4724.2,USD,27/10/2020,False,23/06/2023
+5,Carroll-Burch,Airbnb,3867.11,USD,01/02/2021,False,25/07/2022
+6,James LLC,Zillow,2850.27,USD,20/03/2025,True,16/02/2021
+7,"Crane, Rodriguez and Charles",Airbnb,4900.15,USD,30/01/2020,True,06/01/2021
+8,Stewart-Abbott,Realtor,3085.36,USD,28/05/2023,False,21/08/2023
+9,"Dean, Johnson and Stanley",Zillow,1778.69,USD,01/12/2023,False,07/04/2023
+10,Riley Inc,Craigslist,2794.78,EUR,14/11/2021,True,20/03/2025

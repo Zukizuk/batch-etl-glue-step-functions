@@ -1,0 +1,11 @@
+user_id,apartment_id,viewed_at,is_wishlisted,call_to_action
+5353,180678,23/01/2023,False,Reported
+8341,12140,14/05/2021,True,Reported
+5517,72896,27/06/2023,True,Contact Agent
+1710,19727,15/10/2022,True,Shortlisted
+896,44550,06/02/2020,False,Reported
+7210,157092,03/07/2023,True,Reported
+2063,135236,17/01/2021,False,Shortlisted
+5993,35189,23/12/2024,False,Contact Agent
+2681,79428,10/02/2022,True,Reported
+5970,150952,10/08/2020,False,Contact Agent
