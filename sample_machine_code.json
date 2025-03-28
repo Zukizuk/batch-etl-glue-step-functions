@@ -1,0 +1,64 @@
+{
+  "StartAt": "ExtractDataFromRDS",
+  "States": {
+    "ExtractDataFromRDS": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "extract-rds-to-s3",
+        "Payload": {}
+      },
+      "Next": "CopyRawToRedshift"
+    },
+    "CopyRawToRedshift": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:redshiftdata:executeStatement",
+      "Parameters": {
+        "ClusterIdentifier": "your-cluster-id",
+        "Database": "your-db",
+        "DbUser": "your-user",
+        "Sql.$": "States.StringToJson('s3://your-bucket/scripts/copy_raw.sql').Sql"
+      },
+      "Next": "CrawlAndTransform"
+    },
+    "CrawlAndTransform": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun",
+      "Parameters": {
+        "JobName": "curated-data-transform"
+      },
+      "Next": "CopyCuratedToRedshift"
+    },
+    "CopyCuratedToRedshift": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:redshiftdata:executeStatement",
+      "Parameters": {
+        "ClusterIdentifier": "your-cluster-id",
+        "Database": "your-db",
+        "DbUser": "your-user",
+        "Sql.$": "States.StringToJson('s3://your-bucket/scripts/copy_curated.sql').Sql"
+      },
+      "Next": "ComputePresentationMetrics"
+    },
+    "ComputePresentationMetrics": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:redshiftdata:executeStatement",
+      "Parameters": {
+        "ClusterIdentifier": "your-cluster-id",
+        "Database": "your-db",
+        "DbUser": "your-user",
+        "Sql.$": "States.StringToJson('s3://your-bucket/scripts/presentation_metrics.sql').Sql"
+      },
+      "Next": "NotifyCompletion"
+    },
+    "NotifyCompletion": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "TopicArn": "arn:aws:sns:your-region:your-account-id:your-topic",
+        "Message": "Step Function Workflow Completed Successfully!"
+      },
+      "End": true
+    }
+  }
+}
