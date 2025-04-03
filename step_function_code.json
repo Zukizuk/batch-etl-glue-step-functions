@@ -1,0 +1,63 @@
+{
+  "Comment": "Batch Data Processing for Rental Marketplace Analytics",
+  "StartAt": "ExtractRawToS3",
+  "States": {
+    "ExtractRawToS3": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "Extract_To_S3"
+      },
+      "Next": "CopyRawToRedshift"
+    },
+    "CopyRawToRedshift": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "execute_redshift_queries",
+        "Arguments": {
+          "--cluster_id": "****",
+          "--database": "***",
+          "--db_user": "***",
+          "--layer": "raw"
+        }
+      },
+      "Next": "TransformRawToS3"
+    },
+    "TransformRawToS3": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "transform_raw_notebook"
+      },
+      "Next": "CopyCuratedToRedshift"
+    },
+    "CopyCuratedToRedshift": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "execute_redshift_queries",
+        "Arguments": {
+          "--cluster_id": "****",
+          "--database": "***",
+          "--db_user": "***",
+          "--layer": "curated"
+        }
+      },
+      "Next": "ExecuteComputeQueries"
+    },
+    "ExecuteComputeQueries": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "compute_kpis",
+        "Arguments": {
+          "--cluster_id": "****",
+          "--database": "***",
+          "--db_user": "***"
+        }
+      },
+      "End": true
+    }
+  }
+}
